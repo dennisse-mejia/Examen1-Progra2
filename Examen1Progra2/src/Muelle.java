@@ -11,9 +11,6 @@ import java.util.List;
  *
  * @author dennisse
  */
-
-
-
 public class Muelle {
 
     private final List<Barco> barcos;
@@ -21,12 +18,12 @@ public class Muelle {
 
     public Muelle() {
         barcos = new ArrayList<>();
-        infoBarcoTextArea = new JTextArea(10, 30);  
-        infoBarcoTextArea.setEditable(false);  
+        infoBarcoTextArea = new JTextArea(10, 30);
+        infoBarcoTextArea.setEditable(false);
     }
 
     public void agregarBarco(String tipo) {
-        if (tipo == null) {  
+        if (tipo == null) {
             return;
         }
 
@@ -36,9 +33,18 @@ public class Muelle {
             return;
         }
 
-        String nombre = JOptionPane.showInputDialog("Ingrese el nombre del barco:");
-        if (nombre == null) { 
-            return;
+        String nombre = null;
+        boolean nombreValido = false;
+
+        while (!nombreValido) {
+            nombre = JOptionPane.showInputDialog("Ingrese el nombre del barco:");
+            if (nombre == null || nombre.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "El nombre del barco no puede estar vacío.");
+            } else if (!nombre.matches("[a-zA-Z\\s]+")) {
+                JOptionPane.showMessageDialog(null, "El nombre del barco solo puede contener letras y espacios.");
+            } else {
+                nombreValido = true;
+            }
         }
 
         for (Barco barco : barcos) {
@@ -51,7 +57,7 @@ public class Muelle {
         Barco nuevoBarco = null;
         if (tipo.equals("PESQUERO")) {
             String tipoPesquero = JOptionPane.showInputDialog("Ingrese el tipo de pesquero (PEZ, CAMARON, LANGOSTA):");
-            if (tipoPesquero == null) {  
+            if (tipoPesquero == null) {
                 return;
             }
             TipoPesquero tipoPesqueroEnum;
@@ -83,19 +89,32 @@ public class Muelle {
     }
 
     public void agregarElemento(String nombre) {
-        if (nombre == null) {  
+        if (nombre == null) {
             return;
         }
 
         Barco barco = buscarBarco(nombre);
         if (barco != null) {
+            int pasajerosAntes = 0;
+
+            if (barco instanceof BarcoPasajero) {
+                pasajerosAntes = ((BarcoPasajero) barco).getContadorPasajeros();
+            }
+
             barco.agregarElemento();
 
             if (barco instanceof BarcoPesquero) {
-                ((BarcoPesquero) barco).agregarElemento();
                 infoBarcoTextArea.append("Peces capturados aumentados en 1 para el barco: " + nombre + "\n\n");
                 JOptionPane.showMessageDialog(null, "Peces capturados aumentados en 1 para el barco: " + nombre);
+            } else if (barco instanceof BarcoPasajero) {
+                int pasajerosDespues = ((BarcoPasajero) barco).getContadorPasajeros();
+                if (pasajerosDespues > pasajerosAntes) {
+                    infoBarcoTextArea.append("Pasajero agregado al barco: " + nombre + "\n\n");
+                    JOptionPane.showMessageDialog(null, "Pasajero agregado al barco: " + nombre);
+                }
             }
+
+            infoBarcoTextArea.append(barco.toString() + "\n\n");
         } else {
             JOptionPane.showMessageDialog(null, "Barco no encontrado.");
         }
@@ -104,10 +123,14 @@ public class Muelle {
     public double vaciarBarco(String nombre) {
         Barco barco = buscarBarco(nombre);
         if (barco != null) {
+            String infoAntesDeVaciado = barco.toString();
+
             double total = barco.vaciarCobrar();
-            String vaciadoInfo = "Barco vaciado: " + barco.toString() + "\nTotal generado: " + total + "\n\n";
+
+            String vaciadoInfo = "Barco vaciado: " + infoAntesDeVaciado + "\nTotal generado: " + total + "\n\n";
             infoBarcoTextArea.append(vaciadoInfo);
             JOptionPane.showMessageDialog(null, vaciadoInfo);
+
             if (barco instanceof BarcoPasajero) {
                 ((BarcoPasajero) barco).listarPasajeros();
             }
@@ -168,7 +191,6 @@ public class Muelle {
                     muelle.barcosDesde(year);
                     break;
                 case 4:
-                    JOptionPane.showMessageDialog(null, "Saliendo...");
                     break;
                 default:
                     break;
@@ -183,5 +205,3 @@ public class Muelle {
         return panel;
     }
 }
-
-

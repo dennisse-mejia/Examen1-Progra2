@@ -13,7 +13,7 @@ public final class BarcoPasajero extends Barco {
 
     private final String[] pasajeros;
     private final double precioBoleto;
-    private int contadorPasajeros;
+    public int contadorPasajeros;
 
     public BarcoPasajero(String nombre, int capacidad, double precioBoleto) {
         super(nombre);
@@ -24,11 +24,26 @@ public final class BarcoPasajero extends Barco {
 
     public void agregarElemento() {
         if (contadorPasajeros < pasajeros.length) {
-            String nombrePasajero = JOptionPane.showInputDialog("Ingrese el nombre del pasajero:");
+            String nombrePasajero = null;
+            boolean nombreValido = false;
+
+            while (!nombreValido) {
+                nombrePasajero = JOptionPane.showInputDialog("Ingrese el nombre del pasajero:");
+
+                if (nombrePasajero == null || nombrePasajero.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "El nombre del pasajero no puede estar vacío.");
+                } else if (!nombrePasajero.matches("[a-zA-Z\\s]+")) {
+                    JOptionPane.showMessageDialog(null, "El nombre del pasajero no puede contener números.");
+                } else {
+                    nombreValido = true;
+                }
+            }
+
             pasajeros[contadorPasajeros] = nombrePasajero;
             contadorPasajeros++;
         } else {
             JOptionPane.showMessageDialog(null, "El barco está lleno.");
+            return;  
         }
     }
 
@@ -57,4 +72,10 @@ public final class BarcoPasajero extends Barco {
             listarPasajerosRecursivo(index + 1);
         }
     }
+
+    public int getContadorPasajeros() {
+        return contadorPasajeros;
+    }
+
+    
 }

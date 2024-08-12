@@ -9,9 +9,7 @@
  * @author dennisse
  */
 public enum TipoPesquero {
-    PEZ(100.0),
-    CAMARON(150.0),
-    LANGOSTA(250.0);
+    PEZ(100.0), CAMARON(150.0), LANGOSTA(250.0);
 
     public final double price;
 

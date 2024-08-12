@@ -25,7 +25,9 @@ public final class BarcoPesquero extends Barco {
 
     public double vaciarCobrar() {
         double total = pecesCapturados * tipoPesquero.price;
+
         pecesCapturados = 0;
+
         return total;
     }
 
@@ -37,3 +39,4 @@ public final class BarcoPesquero extends Barco {
         return super.toString() + " [Tipo: " + tipoPesquero + ", Peces Capturados: " + pecesCapturados + "]";
     }
 }
+
