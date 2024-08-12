@@ -8,6 +8,15 @@
  *
  * @author dennisse
  */
-public class TipoPesquero {
-    
+public enum TipoPesquero {
+    PEZ(100.0),
+    CAMARON(150.0),
+    LANGOSTA(250.0);
+
+    public final double price;
+
+    TipoPesquero(double price) {
+        this.price = price;
+    }
+
 }
